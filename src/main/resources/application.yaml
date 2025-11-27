@@ -6,6 +6,6 @@ spring:
     show-sql: true
   datasource:
     url: jdbc:postgresql://localhost:5432/exercicio-jwt
-    password: 601034
+    password: Sen@c2023
     username: postgres
     driverClassName: org.postgresql.Driver

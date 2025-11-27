@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientesService {
@@ -19,6 +20,11 @@ public class ClientesService {
     }
 
     public Clientes criar(ClientesRequestDTO cliente) {
+        Optional<Clientes> clienteResult =
+                clientesRepositorio.fingByDocumento(cliente.getDocumento());
+        if(clienteResult.isPresent()) {
+            throw new RuntimeException("Documento já cadastrado no banco de dados");
+        }
 
         return clientesRepositorio.save(this.clientesRequestDtoParaCliente(cliente));
     }
@@ -41,9 +47,14 @@ public class ClientesService {
     }
 
     private Clientes clientesRequestDtoParaCliente(ClientesRequestDTO entrada) {
+        String documento =
+                entrada.getDocumento()
+                        .replace(".","")
+                        .replace("-", "");
+
         Clientes saida = new Clientes();
         saida.setNome(entrada.getNome());
-        saida.setDocumento(entrada.getDocumento());
+        saida.setDocumento(documento);
         saida.setEmail(entrada.getEmail());
         saida.setDataNascimento(entrada.getDataNascimento());
 
